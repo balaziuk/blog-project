@@ -24,7 +24,7 @@ const createTable = async () => {
     CREATE TABLE IF NOT EXISTS comments (
       id SERIAL PRIMARY KEY,
       post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE, 
-      author_ip VARCHAR(45) NOT NULL, // IP-адреса коментатора
+      author_ip VARCHAR(45) NOT NULL,
       content TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -35,7 +35,7 @@ const createTable = async () => {
       post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
       ip_address VARCHAR(45) NOT NULL,
       liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (post_id, ip_address) // Композитний ключ: один IP може лайкнути один пост лише раз
+      PRIMARY KEY (post_id, ip_address)
     );
   `;
 

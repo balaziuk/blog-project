@@ -3,9 +3,7 @@ require("dotenv").config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: { rejectUnauthorized: false },
 });
 
 const createTable = async () => {
@@ -14,7 +12,10 @@ const createTable = async () => {
       id SERIAL PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
       description TEXT,
-      author VARCHAR(100) NOT NULL,
+      author VARCHAR(100) DEFAULT 'Anonymous',
+      author_ip VARCHAR(45) NOT NULL,
+      media_url TEXT,
+      media_type VARCHAR(10),  
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       likes INT DEFAULT 0
     );
@@ -23,7 +24,7 @@ const createTable = async () => {
   const commentsTableQuery = `
     CREATE TABLE IF NOT EXISTS comments (
       id SERIAL PRIMARY KEY,
-      post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE, 
+      post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
       author_ip VARCHAR(45) NOT NULL,
       content TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -41,13 +42,9 @@ const createTable = async () => {
 
   try {
     await pool.query(postsTableQuery);
-    await pool.query(
-      "ALTER TABLE posts ADD COLUMN IF NOT EXISTS likes INT DEFAULT 0"
-    );
-
     await pool.query(commentsTableQuery);
     await pool.query(likesLogTableQuery);
-
+    
     console.log(
       "successfully created tables 'posts', 'comments', and 'likes_log'"
     );

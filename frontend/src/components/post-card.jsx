@@ -207,46 +207,6 @@ export function PostCard({ post: initialPost, onLike, onDelete, onEdit }) {
           </Typography>
         )}
       </Box>
-
-      {post.media_url && (
-        <Box
-          sx={{
-            bgcolor: "#000",
-            height: { xs: 400, sm: 500, md: 600, lg: 700 },
-            minHeight: { xs: 400, sm: 500, md: 600, lg: 700 },
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          {post.media_type === "video" ? (
-            <video
-              controls
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-              poster={`${API_URL}${post.media_url}#t=0.1`}
-            >
-              <source src={`${API_URL}${post.media_url}`} />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <img
-              src={`${API_URL}${post.media_url}`}
-              alt={post.title}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-            />
-          )}
-        </Box>
-      )}
-
       <Box
         sx={{
           p: { xs: 2, md: 3 },

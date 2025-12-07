@@ -36,7 +36,6 @@ export default function Home() {
       } else {
         await api.createPost(formData);
       }
-      // Перезавантажуємо всі пости після створення/оновлення
       await loadPosts();
       setEditingPost(null);
       setDialogOpen(false);
@@ -48,7 +47,6 @@ export default function Home() {
   const handleLike = async (postId) => {
     try {
       const res = await api.toggleLike(postId);
-      // Оновлюємо тільки цей пост локально
       setPosts((prev) =>
         prev.map((p) =>
           p.id === postId
@@ -74,6 +72,14 @@ export default function Home() {
       alert(t.deleteError || "Failed to delete");
     }
   };
+
+  const handleCommentCountChange = useCallback((postId, newCount) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId ? { ...post, comments_count: newCount } : post
+      )
+    );
+  }, []);
 
   if (loading)
     return (
@@ -119,6 +125,7 @@ export default function Home() {
                     setEditingPost(post);
                     setDialogOpen(true);
                   }}
+                  onCommentCountChange={handleCommentCountChange}
                 />
               ))}
             </Box>

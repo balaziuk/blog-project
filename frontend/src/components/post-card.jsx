@@ -28,7 +28,13 @@ import { api } from "@/api/api";
 import { translations as t } from "@/utils/translations";
 const API_URL = import.meta.env.VITE_API_URL;
 
-export function PostCard({ post: initialPost, onLike, onDelete, onEdit }) {
+export function PostCard({
+  post: initialPost,
+  onLike,
+  onDelete,
+  onEdit,
+  onCommentCountChange,
+}) {
   const [post, setPost] = useState(initialPost);
   const [expanded, setExpanded] = useState(false);
   const [comment, setComment] = useState("");
@@ -42,7 +48,6 @@ export function PostCard({ post: initialPost, onLike, onDelete, onEdit }) {
   const [editingText, setEditingText] = useState("");
   const [menuAnchor, setMenuAnchor] = useState(null);
 
-  // Синхронізація з пропсами при оновленні
   useEffect(() => {
     setPost(initialPost);
   }, [initialPost]);
@@ -89,6 +94,10 @@ export function PostCard({ post: initialPost, onLike, onDelete, onEdit }) {
     try {
       await api.addComment(post.id, comment);
       loadComments(1);
+
+      if (typeof onCommentCountChange === "function") {
+        onCommentCountChange(post.id, post.comments_count + 1);
+      }
     } catch {
       setComments((prev) => prev.filter((c) => c.id !== tempId));
       setPost((prev) => ({ ...prev, comments_count: prev.comments_count - 1 }));
@@ -102,7 +111,13 @@ export function PostCard({ post: initialPost, onLike, onDelete, onEdit }) {
     try {
       await api.deleteComment(id);
       setComments((prev) => prev.filter((c) => c.id !== id));
-      setPost((prev) => ({ ...prev, comments_count: prev.comments_count - 1 }));
+
+      const newCount = post.comments_count - 1;
+      setPost((prev) => ({ ...prev, comments_count: newCount }));
+
+      if (typeof onCommentCountChange === "function") {
+        onCommentCountChange(post.id, newCount);
+      }
     } catch {
       alert(t.deleteCommentError);
     }
@@ -314,15 +329,6 @@ export function PostCard({ post: initialPost, onLike, onDelete, onEdit }) {
                   )}
                 </Paper>
               ))
-            )}
-            {hasMore && (
-              <Button
-                fullWidth
-                onClick={() => loadComments(page + 1)}
-                disabled={loading}
-              >
-                {t.loadMore}
-              </Button>
             )}
           </Stack>
 

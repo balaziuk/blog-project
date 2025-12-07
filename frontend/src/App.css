@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --bg: #F3F4F6;
+  --fg: #1F2937;
+  --card: #FFFFFF;
+  --card-fg: #1F2937;
+  --primary: #8B5CF6;
+  --primary-fg: #FFFFFF;
+  --border: #E5E7EB;
+  --input: #F9FAFB;
+  --radius: 1.5rem;
+}
+
+.dark {
+  --bg: #0F0F0F;
+  --fg: #F5F5F5;
+  --card: #1A1A1A;
+  --card-fg: #F5F5F5;
+  --primary: #A78BFA;
+  --border: #2D2D2D;
+  --input: #262626;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+}
